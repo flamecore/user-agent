@@ -1,0 +1,28 @@
+{
+    "name": "flamecore/user-agent",
+    "description": "Simple browser detection for PHP",
+    "type": "library",
+    "homepage": "http://www.flamecore.org",
+    "keywords": ["user agent", "browser"],
+    "license": "ISC",
+    "authors": [
+        {
+            "name": "Christian Neff",
+            "email": "christian.neff@gmail.com",
+            "homepage": "http://www.secondtruth.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/FlameCore/UserAgent/issues",
+        "wiki": "https://github.com/FlameCore/UserAgent/wiki"
+    },
+    "require": {
+        "php": ">=5.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlameCore\\UserAgent\\": "lib/"
+        }
+    }
+}
