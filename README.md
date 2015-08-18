@@ -1,7 +1,9 @@
 FlameCore UserAgent
 ===================
 
+[![Build Status](https://img.shields.io/travis/FlameCore/UserAgent.svg)](https://travis-ci.org/FlameCore/UserAgent)
 [![Scrutinizer](http://img.shields.io/scrutinizer/g/FlameCore/UserAgent.svg)](https://scrutinizer-ci.com/g/FlameCore/UserAgent)
+[![Coverage](http://img.shields.io/scrutinizer/coverage/g/FlameCore/UserAgent.svg)](https://scrutinizer-ci.com/g/FlameCore/UserAgent)
 [![License](http://img.shields.io/packagist/l/flamecore/user-agent.svg)](http://www.flamecore.org/projects/user-agent)
 
 This library provides simple browser detection for PHP. It uses a simple and fast algorithm to recognize major browsers.
