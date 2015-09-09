@@ -56,7 +56,7 @@ class UserAgent
     /**
      * Creates a UserAgent object.
      *
-     * @param string $string The user agent string
+     * @param string $string The user agent string. Uses the current User Agent string by default.
      * @param \FlameCore\UserAgent\UserAgentStringParser $parser The parser used to parse the string
      */
     public function __construct($string = null, UserAgentStringParser $parser = null)

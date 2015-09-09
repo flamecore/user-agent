@@ -26,8 +26,9 @@ class UserAgentStringParser
     /**
      * Parses a user agent string.
      *
-     * @param string $string The user agent string (Default: `$_SERVER['HTTP_USER_AGENT']`)
+     * @param string $string The user agent string. Uses the current User Agent string by default.
      * @param bool $fast Make the parser run faster while sacrificing accuracy
+     *
      * @return array Returns the user agent information:
      *
      *   - `string`:           The original user agent string
@@ -63,6 +64,7 @@ class UserAgentStringParser
      * Cleans the user agent string.
      *
      * @param string $string The dirty user agent string
+     *
      * @return string Returns the clean user agent string.
      */
     public function cleanString($string)
@@ -74,6 +76,7 @@ class UserAgentStringParser
      * Extracts information from the user agent string.
      *
      * @param string $string The user agent string
+     *
      * @return array Returns the user agent information.
      */
     protected function doParse($string)
@@ -224,6 +227,7 @@ class UserAgentStringParser
      * Filters bots to increase accuracy.
      *
      * @param array $userAgent The user agent information
+     *
      * @return array Returns the updated user agent information.
      */
     protected function filterBots(array $userAgent)
@@ -241,6 +245,7 @@ class UserAgentStringParser
      * Filters browser names to increase accuracy.
      *
      * @param array $userAgent The user agent information
+     *
      * @return array Returns the updated user agent information.
      */
     protected function filterBrowserNames(array $userAgent)
@@ -259,6 +264,7 @@ class UserAgentStringParser
      * Filters browser versions to increase accuracy.
      *
      * @param array $userAgent The user agent information
+     *
      * @return array Returns the updated user agent information.
      */
     protected function filterBrowserVersions(array $userAgent)
@@ -282,6 +288,7 @@ class UserAgentStringParser
      * Filters browser engines to increase accuracy.
      *
      * @param array $userAgent The user agent information
+     *
      * @return array Returns the updated user agent information.
      */
     protected function filterBrowserEngines(array $userAgent)
@@ -299,6 +306,7 @@ class UserAgentStringParser
      * Filters operating systems to increase accuracy.
      *
      * @param array $userAgent The user agent information
+     *
      * @return array Returns the updated user agent information.
      */
     protected function filterOperatingSystems(array $userAgent)
@@ -316,6 +324,7 @@ class UserAgentStringParser
      * Filters devices to increase accuracy.
      *
      * @param array $userAgent The user agent information
+     *
      * @return array Returns the updated user agent information.
      */
     protected function filterDevices(array $userAgent)
