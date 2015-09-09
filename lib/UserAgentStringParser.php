@@ -27,6 +27,7 @@ class UserAgentStringParser
      * Parses a user agent string.
      *
      * @param string $string The user agent string (Default: `$_SERVER['HTTP_USER_AGENT']`)
+     * @param bool $fast Make the parser run faster while sacrificing accuracy
      * @return array Returns the user agent information:
      *
      *   - `string`:           The original user agent string
@@ -35,7 +36,7 @@ class UserAgentStringParser
      *   - `browser_engine`:   The browser engine, e.g. `"webkit"`
      *   - `operating_system`: The operating system, e.g. `"linux"`
      */
-    public function parse($string = null)
+    public function parse($string = null, $fast = false)
     {
         // use current user agent string as default
         if ($string === null) {
@@ -46,12 +47,14 @@ class UserAgentStringParser
         $information = $this->doParse($string);
 
         // run some filters to increase accuracy
-        $information = $this->filterBots($information);
-        $information = $this->filterBrowserNames($information);
-        $information = $this->filterBrowserVersions($information);
-        $information = $this->filterBrowserEngines($information);
-        $information = $this->filterOperatingSystems($information);
-        $information = $this->filterDevices($information);
+        if (!$fast) {
+            $information = $this->filterBots($information);
+            $information = $this->filterBrowserNames($information);
+            $information = $this->filterBrowserVersions($information);
+            $information = $this->filterBrowserEngines($information);
+            $information = $this->filterOperatingSystems($information);
+            $information = $this->filterDevices($information);
+        }
 
         return $information;
     }
