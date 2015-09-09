@@ -107,40 +107,18 @@ class UserAgentStringParser
         }
 
         // Find operating system
-        foreach ($this->getKnownOperatingSystems() as $name => $regexes) {
-            $pattern = '#(?<!like )('.join('|', $regexes).')#i';
-
-            if (preg_match($pattern, $userAgent['string'])) {
-                $userAgent['operating_system'] = $name;
-
-                break;
-            }
+        if ($result = $this->match($this->getKnownOperatingSystems(), $userAgent['string'])) {
+            $userAgent['operating_system'] = $result;
         }
 
         // Find browser engine
-        foreach ($this->getKnownEngines() as $name => $regexes) {
-            $pattern = '#(?<!like )('.join('|', $regexes).')#i';
-
-            if (preg_match($pattern, $userAgent['string'])) {
-                $userAgent['browser_engine'] = $name;
-
-                break;
-            }
+        if ($result = $this->match($this->getKnownEngines(), $userAgent['string'])) {
+            $userAgent['browser_engine'] = $result;
         }
 
         // Find device name
-        foreach ($this->getKnownDevices() as $name => $regexes) {
-            $pattern = '#(?<!like )('.join('|', $regexes).')#i';
-
-            if (preg_match($pattern, $userAgent['string'], $matches)) {
-                if (isset($matches[2])) {
-                    $name = str_replace('*', strtoupper($matches[2]), $name);
-                }
-
-                $userAgent['device'] = $name;
-
-                break;
-            }
+        if ($result = $this->match($this->getKnownDevices(), $userAgent['string'], true)) {
+            $userAgent['device'] = $result;
         }
 
         return $userAgent;
@@ -340,5 +318,31 @@ class UserAgentStringParser
     protected function filterDevices(array $userAgent)
     {
         return $userAgent;
+    }
+
+    /**
+     * Matches the User Agent string against the given list of regexes.
+     *
+     * @param array $list The list of regexes
+     * @param string $string The User Agent string
+     * @param bool $wildcard Enable wildcard
+     *
+     * @return string Returns the matched entry from the list or FALSE if no entry matched.
+     */
+    protected function match(array $list, $string, $wildcard = false)
+    {
+        foreach ($list as $name => $regexes) {
+            $pattern = '#(?<!like )('.join('|', $regexes).')#i';
+
+            if (preg_match($pattern, $string, $matches)) {
+                if ($wildcard && isset($matches[2])) {
+                    $name = str_replace('*', strtoupper($matches[2]), $name);
+                }
+
+                return $name;
+            }
+        }
+
+        return false;
     }
 }
