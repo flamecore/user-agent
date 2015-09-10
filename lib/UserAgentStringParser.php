@@ -49,13 +49,27 @@ class UserAgentStringParser
 
         // run some filters to increase accuracy
         if (!$fast) {
-            $information = $this->filterBots($information);
-            $information = $this->filterBrowserNames($information);
-            $information = $this->filterBrowserVersions($information);
-            $information = $this->filterBrowserEngines($information);
-            $information = $this->filterOperatingSystems($information);
-            $information = $this->filterDevices($information);
+            $information = $this->filter($information);
         }
+
+        return $information;
+    }
+
+    /**
+     * Filters the results to increase accuracy.
+     *
+     * @param array $information The user agent information
+     *
+     * @return array Returns the updated user agent information.
+     */
+    public function filter(array $information)
+    {
+        $information = $this->filterBots($information);
+        $information = $this->filterBrowserNames($information);
+        $information = $this->filterBrowserVersions($information);
+        $information = $this->filterBrowserEngines($information);
+        $information = $this->filterOperatingSystems($information);
+        $information = $this->filterDevices($information);
 
         return $information;
     }
