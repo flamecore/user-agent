@@ -109,21 +109,9 @@ class UserAgentStringParser
         }
 
         // Find the right name/version phrase (or return empty array if none found)
-        foreach ($this->getKnownBrowsers() as $browser => $regexes) {
-            // Build regex that matches phrases for known browsers (e.g. "Firefox/2.0" or "MSIE 6.0").
-            // This only matches the major and minor version numbers (e.g. "2.0.0.6" is parsed as simply "2.0").
-            $pattern = '#('.join('|', $regexes).')[/ ]+([0-9]+(?:\.[0-9]+)?)#i';
-
-            if (preg_match($pattern, $userAgent['string'], $matches)) {
-                if (isset($matches[3])) {
-                    $browser = str_replace('*', strtolower($matches[2]), $browser);
-                }
-
-                $userAgent['browser_name'] = $browser;
-                $userAgent['browser_version'] = end($matches);
-
-                break;
-            }
+        if ($result = $this->matchBrowser($this->getKnownBrowsers(), $userAgent['string'])) {
+            $userAgent['browser_name'] = $result[0];
+            $userAgent['browser_version'] = $result[1];
         }
 
         // Find operating system
@@ -344,6 +332,33 @@ class UserAgentStringParser
     protected function filterDevices(array $userAgent)
     {
         return $userAgent;
+    }
+
+    /**
+     * Matches the list of browsers against the given User Agent string.
+     *
+     * @param array $browsers The list of browsers
+     * @param string $string The User Agent string
+     *
+     * @return array Returns the name and the version of the matched browser or FALSE if no browser matched.
+     */
+    protected function matchBrowser(array $browsers, $string)
+    {
+        foreach ($browsers as $name => $regexes) {
+            // Build regex that matches phrases for known browsers (e.g. "Firefox/2.0" or "MSIE 6.0").
+            // This only matches the major and minor version numbers (e.g. "2.0.0.6" is parsed as simply "2.0").
+            $pattern = '#('.join('|', $regexes).')[/ ]+([0-9]+(?:\.[0-9]+)?)#i';
+
+            if (preg_match($pattern, $string, $matches)) {
+                if (isset($matches[3])) {
+                    $name = str_replace('*', strtolower($matches[2]), $name);
+                }
+
+                return [$name, end($matches)];
+            }
+        }
+
+        return false;
     }
 
     /**
