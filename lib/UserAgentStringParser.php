@@ -39,15 +39,15 @@ class UserAgentStringParser
      */
     public function parse($string = null, $fast = false)
     {
-        // use current user agent string as default
+        // Use current user agent string as default
         if ($string === null) {
             $string = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
         }
 
-        // parse quickly (with medium accuracy)
+        // Parse quickly (with medium accuracy)
         $information = $this->doParse($string);
 
-        // run some filters to increase accuracy
+        // Run some filters to increase accuracy
         if (!$fast) {
             $information = $this->filter($information);
         }
@@ -237,6 +237,7 @@ class UserAgentStringParser
         // Yahoo bot has a special user agent string
         if ($userAgent['browser_name'] === null && stripos($userAgent['string'], 'yahoo! slurp')) {
             $userAgent['browser_name'] = 'yahoobot';
+
             return $userAgent;
         }
 
@@ -256,6 +257,7 @@ class UserAgentStringParser
         if (empty($userAgent['browser_name']) && $userAgent['browser_engine'] === 'trident' && strpos($userAgent['string'], 'rv:')) {
             $userAgent['browser_name'] = 'msie';
             $userAgent['browser_version'] = preg_replace('|.+rv:([0-9]+(?:\.[0-9]+)+).+|', '$1', $userAgent['string']);
+
             return $userAgent;
         }
 
@@ -274,12 +276,14 @@ class UserAgentStringParser
         // Safari version is not encoded "normally"
         if ($userAgent['browser_name'] === 'safari' && stripos($userAgent['string'], ' version/')) {
             $userAgent['browser_version'] = preg_replace('|.+\sversion/([0-9]+(?:\.[0-9]+)?).+|i', '$1', $userAgent['string']);
+
             return $userAgent;
         }
 
         // Opera 10.00 (and higher) version number is located at the end
         if ($userAgent['browser_name'] === 'opera' && stripos($userAgent['string'], ' version/')) {
             $userAgent['browser_version'] = preg_replace('|.+\sversion/([0-9]+\.[0-9]+)\s*.*|i', '$1', $userAgent['string']);
+
             return $userAgent;
         }
 
@@ -298,6 +302,7 @@ class UserAgentStringParser
         // MSIE does not always declare its engine
         if ($userAgent['browser_name'] === 'msie' && empty($userAgent['browser_engine'])) {
             $userAgent['browser_engine'] = 'trident';
+
             return $userAgent;
         }
 
@@ -316,6 +321,7 @@ class UserAgentStringParser
         // Android instead of Linux
         if (strpos($userAgent['string'], 'Android ')) {
             $userAgent['operating_system'] = preg_replace('|.+(Android [0-9]+(?:\.[0-9]+)+).+|', '$1', $userAgent['string']);
+
             return $userAgent;
         }
 
@@ -362,7 +368,7 @@ class UserAgentStringParser
     }
 
     /**
-     * Matches the User Agent string against the given list of regexes.
+     * Matches the list of regexes against the given User Agent string.
      *
      * @param array $list The list of regexes
      * @param string $string The User Agent string
