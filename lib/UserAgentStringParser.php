@@ -75,18 +75,6 @@ class UserAgentStringParser
     }
 
     /**
-     * Cleans the user agent string.
-     *
-     * @param string $string The dirty user agent string
-     *
-     * @return string Returns the clean user agent string.
-     */
-    public function cleanString($string)
-    {
-        return trim($string);
-    }
-
-    /**
      * Extracts information from the user agent string.
      *
      * @param string $string The user agent string
@@ -109,27 +97,99 @@ class UserAgentStringParser
         }
 
         // Find the right name/version phrase (or return empty array if none found)
-        if ($result = $this->matchBrowser($this->getKnownBrowsers(), $userAgent['string'])) {
-            $userAgent['browser_name'] = $result[0];
-            $userAgent['browser_version'] = $result[1];
+        foreach ($this->getKnownBrowsers() as $name => $regexes) {
+            if ($matches = $this->matchBrowser($regexes, $userAgent['string'])) {
+                if (isset($matches[3])) {
+                    $name = str_replace('*', strtolower($matches[2]), $name);
+                }
+
+                $userAgent['browser_name'] = $name;
+                $userAgent['browser_version'] = end($matches);
+
+                break;
+            }
         }
 
         // Find operating system
-        if ($result = $this->match($this->getKnownOperatingSystems(), $userAgent['string'])) {
+        if ($result = $this->find($this->getKnownOperatingSystems(), $userAgent['string'])) {
             $userAgent['operating_system'] = $result;
         }
 
         // Find browser engine
-        if ($result = $this->match($this->getKnownEngines(), $userAgent['string'])) {
+        if ($result = $this->find($this->getKnownEngines(), $userAgent['string'])) {
             $userAgent['browser_engine'] = $result;
         }
 
         // Find device name
-        if ($result = $this->match($this->getKnownDevices(), $userAgent['string'], true)) {
+        if ($result = $this->find($this->getKnownDevices(), $userAgent['string'], true)) {
             $userAgent['device'] = $result;
         }
 
         return $userAgent;
+    }
+
+    /**
+     * Matches the list of browser regexes against the given User Agent string.
+     *
+     * @param array $regexes The list of regexes
+     * @param string $string The User Agent string
+     *
+     * @return array|false Returns the parts of the matching regex or FALSE if no regex matched.
+     */
+    protected function matchBrowser(array $regexes, $string)
+    {
+        // Build regex that matches phrases for known browsers (e.g. "Firefox/2.0" or "MSIE 6.0").
+        // This only matches the major and minor version numbers (e.g. "2.0.0.6" is parsed as simply "2.0").
+        $pattern = '#('.join('|', $regexes).')[/ ]+([0-9]+(?:\.[0-9]+)?)#i';
+
+        if (preg_match($pattern, $string, $matches)) {
+            return $matches;
+        }
+
+        return false;
+    }
+
+    /**
+     * Matches the list of regexes against the given User Agent string.
+     *
+     * @param array $regexes The list of regexes
+     * @param string $string The User Agent string
+     *
+     * @return array|false Returns the parts of the matching regex or FALSE if no regex matched.
+     */
+    protected function match(array $regexes, $string)
+    {
+        $pattern = '#(?<!like )('.join('|', $regexes).')#i';
+
+        if (preg_match($pattern, $string, $matches)) {
+            return $matches;
+        }
+
+        return false;
+    }
+
+    /**
+     * Matches the list of regexes against the given User Agent string.
+     *
+     * @param array $list The list of regexes
+     * @param string $string The User Agent string
+     * @param bool $wildcard Enable wildcard
+     *
+     * @return string Returns the matched entry from the list or FALSE if no entry matched.
+     */
+    protected function find(array $list, $string, $wildcard = false)
+    {
+        foreach ($list as $name => $regexes) {
+            if ($matches = $this->match($regexes, $string)) {
+                if ($wildcard && isset($matches[2])) {
+                    $name = str_replace('*', strtoupper($matches[2]), $name);
+                }
+
+                return $name;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -341,55 +401,14 @@ class UserAgentStringParser
     }
 
     /**
-     * Matches the list of browsers against the given User Agent string.
+     * Cleans the user agent string.
      *
-     * @param array $browsers The list of browsers
-     * @param string $string The User Agent string
+     * @param string $string The dirty user agent string
      *
-     * @return array Returns the name and the version of the matched browser or FALSE if no browser matched.
+     * @return string Returns the clean user agent string.
      */
-    protected function matchBrowser(array $browsers, $string)
+    protected function cleanString($string)
     {
-        foreach ($browsers as $name => $regexes) {
-            // Build regex that matches phrases for known browsers (e.g. "Firefox/2.0" or "MSIE 6.0").
-            // This only matches the major and minor version numbers (e.g. "2.0.0.6" is parsed as simply "2.0").
-            $pattern = '#('.join('|', $regexes).')[/ ]+([0-9]+(?:\.[0-9]+)?)#i';
-
-            if (preg_match($pattern, $string, $matches)) {
-                if (isset($matches[3])) {
-                    $name = str_replace('*', strtolower($matches[2]), $name);
-                }
-
-                return [$name, end($matches)];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Matches the list of regexes against the given User Agent string.
-     *
-     * @param array $list The list of regexes
-     * @param string $string The User Agent string
-     * @param bool $wildcard Enable wildcard
-     *
-     * @return string Returns the matched entry from the list or FALSE if no entry matched.
-     */
-    protected function match(array $list, $string, $wildcard = false)
-    {
-        foreach ($list as $name => $regexes) {
-            $pattern = '#(?<!like )('.join('|', $regexes).')#i';
-
-            if (preg_match($pattern, $string, $matches)) {
-                if ($wildcard && isset($matches[2])) {
-                    $name = str_replace('*', strtoupper($matches[2]), $name);
-                }
-
-                return $name;
-            }
-        }
-
-        return false;
+        return trim($string);
     }
 }
