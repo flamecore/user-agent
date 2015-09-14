@@ -333,16 +333,9 @@ class UserAgentStringParser
      */
     protected function filterBrowserVersions(array $userAgent)
     {
-        // Safari version is not encoded "normally"
-        if ($userAgent['browser_name'] === 'safari' && stripos($userAgent['string'], ' version/')) {
-            $userAgent['browser_version'] = preg_replace('|.+\sversion/([0-9]+(?:\.[0-9]+)?).+|i', '$1', $userAgent['string']);
-
-            return $userAgent;
-        }
-
-        // Opera 10.00 (and higher) version number is located at the end
-        if ($userAgent['browser_name'] === 'opera' && stripos($userAgent['string'], ' version/')) {
-            $userAgent['browser_version'] = preg_replace('|.+\sversion/([0-9]+\.[0-9]+)\s*.*|i', '$1', $userAgent['string']);
+        // Safari and Opera 10.00+ version number is not encoded "normally"
+        if (in_array($userAgent['browser_name'], ['safari', 'opera']) && stripos($userAgent['string'], ' version/')) {
+            $userAgent['browser_version'] = preg_replace('|.+ version/([0-9]+(?:\.[0-9]+)?).*|i', '$1', $userAgent['string']);
 
             return $userAgent;
         }
