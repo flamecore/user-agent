@@ -71,7 +71,7 @@ class UserAgent
      */
     public static function createFromGlobal()
     {
-        return new self($_SERVER['HTTP_USER_AGENT']);
+        return new self();
     }
 
     /**
