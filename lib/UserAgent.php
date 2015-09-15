@@ -270,7 +270,8 @@ class UserAgent
             'maxthon',
             'konqueror',
             'netscape',
-            'lynx'
+            'lynx',
+            'links'
         );
     }
 
