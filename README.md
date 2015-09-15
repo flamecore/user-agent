@@ -35,7 +35,7 @@ use FlameCore\UserAgent\UserAgent;
 require 'vendor/autoload.php';
 
 // Create a user agent object
-$userAgent = new UserAgent();
+$userAgent = UserAgent::createFromGlobal();
 ```
 
 Then the parsed values can be retrieved using the getter methods:
@@ -51,13 +51,13 @@ When you create a `UserAgent` object, the current user agent string is used. You
 
 ``` php
 // Use another User Agent string
-$userAgent = new UserAgent('msnbot/2.0b (+http://search.msn.com/msnbot.htm)');
+$userAgent = UserAgent::create('msnbot/2.0b (+http://search.msn.com/msnbot.htm)');
 $userAgent->getBrowserName(); // msnbot
 
 // Use current User Agent string
-$userAgent = new UserAgent($_SERVER['HTTP_USER_AGENT']);
+$userAgent = UserAgent::create($_SERVER['HTTP_USER_AGENT']);
 // ... which is equivalent to:
-$userAgent = new UserAgent();
+$userAgent = UserAgent::createFromGlobal();
 ```
 
 

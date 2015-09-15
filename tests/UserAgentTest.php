@@ -25,7 +25,7 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
     public function testBrowserUserAgentString()
     {
         $userAgentString = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36';
-        $userAgent = new UserAgent($userAgentString);
+        $userAgent = UserAgent::create($userAgentString);
 
         $this->assertEquals('chrome', $userAgent->getBrowserName(), 'Browser: $userAgent->getBrowserName() works');
         $this->assertEquals('41.0', $userAgent->getBrowserVersion(), 'Browser: $userAgent->getBrowserVersion() works');
@@ -38,7 +38,7 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
     public function testBotUserAgentString()
     {
         $userAgentString = 'Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)';
-        $userAgent = new UserAgent($userAgentString);
+        $userAgent = UserAgent::create($userAgentString);
 
         $this->assertEquals('bingbot', $userAgent->getBrowserName(), 'Bot: $userAgent->getBrowserName() works');
         $this->assertEquals('2.0', $userAgent->getBrowserVersion(), 'Bot: $userAgent->getBrowserVersion() works');
@@ -50,7 +50,7 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
 
     public function testMalformedUserAgentString()
     {
-        $userAgent = new UserAgent('hmm...');
+        $userAgent = UserAgent::create('hmm...');
 
         $this->assertEquals(null, $userAgent->getBrowserName(), 'Malformed: $userAgent->getBrowserName() works');
         $this->assertEquals(null, $userAgent->getBrowserVersion(), 'Malformed: $userAgent->getBrowserVersion() works');
@@ -63,7 +63,7 @@ class UserAgentTest extends \PHPUnit_Framework_TestCase
     public function testToArray()
     {
         $userAgentString = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.0 Safari/537.36';
-        $userAgent = new UserAgent($userAgentString);
+        $userAgent = UserAgent::create($userAgentString);
 
         $expected = array(
             'browser_name'     => 'chrome',
