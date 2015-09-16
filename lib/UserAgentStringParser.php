@@ -39,7 +39,7 @@ class UserAgentStringParser
     /**
      * Parses a user agent string.
      *
-     * @param string $string The user agent string. Uses the current User Agent string by default.
+     * @param string $string The user agent string
      * @param bool $strict Enable strict mode. This makes the parser run a bit slower but increases the accuracy significantly.
      *
      * @return array Returns the user agent information:
@@ -52,11 +52,6 @@ class UserAgentStringParser
      */
     public function parse($string, $strict = true)
     {
-        // Use current user agent string as default
-        if ($string === null) {
-            $string = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
-        }
-
         // Parse quickly (with medium accuracy)
         $information = $this->doParse($string);
 
@@ -66,6 +61,22 @@ class UserAgentStringParser
         }
 
         return $information;
+    }
+
+    /**
+     * Parses the user agent string provided by the global.
+     *
+     * @param bool $strict Enable strict mode. This makes the parser run a bit slower but increases the accuracy significantly.
+     *
+     * @return array Returns the user agent information.
+     *
+     * @see UserAgentStringParser::parse()
+     */
+    public function parseFromGlobal($strict = true)
+    {
+        $string = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+
+        return $this->parse($string, $strict);
     }
 
     /**
