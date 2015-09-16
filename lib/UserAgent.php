@@ -8,7 +8,7 @@
  * above copyright notice and this permission notice appear in all copies.
  *
  * @package  FlameCore\UserAgent
- * @version  1.0
+ * @version  1.0-dev
  * @link     http://www.flamecore.org
  * @license  http://opensource.org/licenses/ISC ISC License
  */

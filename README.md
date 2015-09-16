@@ -71,7 +71,7 @@ Create a file called `composer.json` in your project directory and put the follo
 ```
 {
     "require": {
-        "flamecore/user-agent": "1.0.*"
+        "flamecore/user-agent": "dev-master"
     }
 }
 ```
