@@ -40,7 +40,7 @@ class UserAgentStringParser
      * Parses a user agent string.
      *
      * @param string $string The user agent string. Uses the current User Agent string by default.
-     * @param bool $fast Make the parser run faster while sacrificing accuracy
+     * @param bool $strict Enable strict mode. This makes the parser run a bit slower but increases the accuracy significantly.
      *
      * @return array Returns the user agent information:
      *
@@ -50,7 +50,7 @@ class UserAgentStringParser
      *   - `browser_engine`:   The browser engine, e.g. `"webkit"`
      *   - `operating_system`: The operating system, e.g. `"linux"`
      */
-    public function parse($string = null, $fast = false)
+    public function parse($string, $strict = true)
     {
         // Use current user agent string as default
         if ($string === null) {
@@ -61,7 +61,7 @@ class UserAgentStringParser
         $information = $this->doParse($string);
 
         // Run some filters to increase accuracy
-        if (!$fast) {
+        if ($strict) {
             $information = $this->definition->filter($information);
         }
 
