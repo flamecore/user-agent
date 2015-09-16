@@ -242,12 +242,11 @@ class UserAgent
      */
     public function configureFromUserAgentString($string, UserAgentStringParser $parser = null)
     {
-        if (!$parser) {
-            $parser = new UserAgentStringParser();
-        }
+        $parser = $parser ?: new UserAgentStringParser();
+        $result = $string !== null ? $parser->parse($string) : $parser->parseFromGlobal();
 
         $this->setUserAgentString($string);
-        $this->fromArray($parser->parse($string));
+        $this->fromArray($result);
     }
 
     /**
