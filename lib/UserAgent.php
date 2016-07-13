@@ -59,9 +59,31 @@ class UserAgent
      * @param string $string The user agent string. Uses the current User Agent string by default.
      * @param \FlameCore\UserAgent\UserAgentStringParser $parser The parser used to parse the string
      */
-    public function __construct($string = null, UserAgentStringParser $parser = null)
+    private function __construct($string = null, UserAgentStringParser $parser = null)
     {
         $this->configureFromUserAgentString($string, $parser);
+    }
+
+    /**
+     * Creates a UserAgent object from the global $_SERVER string.
+     *
+     * @return UserAgent The user agent object.
+     */
+    public static function createFromGlobal()
+    {
+        return new self();
+    }
+
+    /**
+     * Creates a UserAgent object.
+     *
+     * @param string $string The user agent string. Uses the current User Agent string by default.
+     * @param \FlameCore\UserAgent\UserAgentStringParser $parser The parser used to parse the string
+     * @return UserAgent The user agent object.
+     */
+    public static function create($string = null, UserAgentStringParser $parser = null)
+    {
+        return new self($string, $parser);
     }
 
     /**
@@ -89,7 +111,7 @@ class UserAgent
      *
      * @param string $string The user agent string
      */
-    public function setUserAgentString($string)
+    private function setUserAgentString($string)
     {
         $this->string = $string;
     }
@@ -105,16 +127,6 @@ class UserAgent
     }
 
     /**
-     * Sets the browser name.
-     *
-     * @param string $name The browser name
-     */
-    public function setBrowserName($name)
-    {
-        $this->browserName = $name;
-    }
-
-    /**
      * Gets the browser version.
      *
      * @return string
@@ -122,16 +134,6 @@ class UserAgent
     public function getBrowserVersion()
     {
         return $this->browserVersion;
-    }
-
-    /**
-     * Sets the browser version.
-     *
-     * @param string $version The browser version
-     */
-    public function setBrowserVersion($version)
-    {
-        $this->browserVersion = $version;
     }
 
     /**
@@ -155,16 +157,6 @@ class UserAgent
     }
 
     /**
-     * Sets the browser engine name.
-     *
-     * @param string $browserEngine The browser engine name
-     */
-    public function setBrowserEngine($browserEngine)
-    {
-        $this->browserEngine = $browserEngine;
-    }
-
-    /**
      * Gets the operating system name.
      *
      * @return string
@@ -175,16 +167,6 @@ class UserAgent
     }
 
     /**
-     * Sets the operating system name.
-     *
-     * @param string $operatingSystem The operating system name
-     */
-    public function setOperatingSystem($operatingSystem)
-    {
-        $this->operatingSystem = $operatingSystem;
-    }
-
-    /**
      * Gets the device name.
      *
      * @return string
@@ -192,16 +174,6 @@ class UserAgent
     public function getDevice()
     {
         return $this->device;
-    }
-
-    /**
-     * Sets the device name.
-     *
-     * @param string $device The device name
-     */
-    public function setDevice($device)
-    {
-        $this->device = $device;
     }
 
     /**
@@ -270,13 +242,13 @@ class UserAgent
      *
      * @param array $data The data array
      */
-    public function fromArray(array $data)
+    private function fromArray(array $data)
     {
-        $this->setBrowserName($data['browser_name']);
-        $this->setBrowserVersion($data['browser_version']);
-        $this->setBrowserEngine($data['browser_engine']);
-        $this->setOperatingSystem($data['operating_system']);
-        $this->setDevice($data['device']);
+        $this->browserName = $data['browser_name'];
+        $this->browserVersion = $data['browser_version'];
+        $this->browserEngine = $data['browser_engine'];
+        $this->operatingSystem = $data['operating_system'];
+        $this->device = $data['device'];
     }
 
     /**
@@ -297,7 +269,8 @@ class UserAgent
             'maxthon',
             'konqueror',
             'netscape',
-            'lynx'
+            'lynx',
+            'links'
         );
     }
 
